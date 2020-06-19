@@ -1,0 +1,19 @@
+{% extends "jobs/job_base.html" %}
+{% block prejob %}
+<div class="container">
+  <h1 class='subpage-title'>{{job.name}}</h1>
+  <div class="col-12">
+    {% include "jobs/_job.html" %}
+    <div class="card-body">
+      <a href="{% url 'jobs:job_edit' pk=job.pk %}" title="update" class="btn btn-simple">
+        <span class="fa fa-edit text-info" aria-hidden="true"></span>
+        <span class="icon-label text-info">Update</span>
+      </a>
+      <a href="{% url 'jobs:job_remove' pk=job.pk %}" title="delete" class="btn btn-simple">
+        <span class="fa fa-remove text-danger" aria-hidden="true"></span>
+        <span class="text-danger icon-label">Delete</span>
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

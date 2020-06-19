@@ -1,0 +1,119 @@
+{% extends "jobs/job_base.html" %}
+{% load bootstrap4 %}
+{% block jobcontent %}
+{% load static %}
+<script type="text/javascript" src="{% static 'jobtracker/js/plots.js' %}"></script>
+<div class="container">
+  {% if user.jobs.count == 0 %}
+  <h1 class='subpage-title'>You have no job applications yet!</h1>
+  <h2 class='subpage-title'>Click <a href="{% url 'jobs:create' %}">here</a> to create a new application!</h2>
+  {% else %}
+  {% endif %}
+  {% if user.jobs.count != 0  %}
+  <h1 class='subpage-title'>Dashboard</h1>
+  <div class="card dash-card">
+    <div class="card-header">
+      <h1 class='text-warning'>Job Applications <span class='badge badge-warning' id='jobCount'>{{ user.jobs.count }}</span></h1>
+    </div>
+    {% endif %}
+  </div>
+  {% if online_jobs.count != 0 %}
+  <div class="card dash-card">
+    <div class="card-header">
+      <h1 class='text-info'>Online Assessments <span class='badge badge-info' id='onelineAssessments'>{{ online_jobs.count }}</span></h1>
+    </div>
+    <div class="card-text">
+      <ul>
+        {% for job in online_jobs %}
+        <li><a href="{% url 'jobs:detail' job.pk %}">{{job.name}}</a>, date of online assessment: {{job.date_online_assessment}}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% endif %}
+  {% if phone_jobs.count != 0 %}
+  <div class="card dash-card">
+    <div class="card-header">
+      <h1 class='text-info'>Phone Interviews <span class='badge badge-info'>{{ phone_jobs.count }}</span></h1>
+    </div>
+    <div class="card-text">
+      <ul>
+        {% for job in phone_jobs %}
+        <li><a href="{% url 'jobs:detail' job.pk %}">{{job.name}}</a>, date of phone interview: {{job.date_phone_interview}}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% endif %}
+  {% if video_jobs.count != 0 %}
+  <div class="card dash-card">
+    <div class="card-header">
+      <h1 class='text-info'>Video Interviews <span class='badge badge-info'>{{ video_jobs.count }}</span></h1>
+    </div>
+    <div class="card-text">
+      <ul>
+        {% for job in video_jobs %}
+        <li><a href="{% url 'jobs:detail' job.pk %}">{{job.name}}</a>, date of video interview: {{job.date_video_interview}}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% endif %}
+  {% if onsite_jobs.count != 0 %}
+  <div class="card dash-card">
+    <div class="card-header">
+      <h1 class='text-info'>Onsite Interviews <span class='badge badge-info'>{{ onsite_jobs.count }}</span></h1>
+    </div>
+    <div class="card-text">
+      <ul>
+        {% for job in onsite_jobs %}
+        <li><a href="{% url 'jobs:detail' job.pk %}">{{job.name}}</a>, date of onsite interview: {{job.date_onsite_interview}}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% endif %}
+  {% if final_jobs.count != 0 %}
+  <div class="card dash-card">
+    <div class="card-header">
+      <h1 class='text-success'>Final Decisions <span class='badge badge-success'>{{ final_jobs.count }}</span></h1>
+    </div>
+    <div class="card-text">
+      <ul>
+        {% for job in final_jobs %}
+        <li><a href="{% url 'jobs:detail' job.pk %}">{{job.name}}</a>, {{job.status}}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% endif %}
+  {% if rejection_jobs.count != 0 %}
+  <div class="card dash-card">
+    <div class="card-header">
+      <h1 class='text-danger'>Rejections <span class='badge badge-danger'>{{ rejection_jobs.count }}</span></h1>
+    </div>
+    <div class="card-text">
+      <ul>
+        {% for job in rejection_jobs %}
+        <li><a href="{% url 'jobs:detail' job.pk %}">{{job.name}}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% endif %}
+  {% if no_response.count != 0 %}
+  <div class="card dash-card">
+    <div class="card-header">
+      <h1 class='text-danger'>No Response <span class='badge badge-danger'>{{ no_response.count }}</span></h1>
+    </div>
+    <div class="card-text">
+      <ul>
+        {% for job in no_response %}
+        <li><a href="{% url 'jobs:detail' job.pk %}">{{job.name}}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

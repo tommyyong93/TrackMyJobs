@@ -1,0 +1,18 @@
+{% extends "jobs/job_base.html" %}
+{% load bootstrap4 %}
+{% block jobcontent %}
+<div class="container class='bg-light'">
+  <h1 class='subpage-title'>Create a new job application!</h1>
+  <div class="container">
+    <form action="{% url 'jobs:create' %}" method="POST" id='jobForm'>
+      {% csrf_token %}
+      {% bootstrap_form form %}
+      <input type="submit" class="btn btn-primary btn-large" value="Create">
+    </form>
+  </div>
+</div>
+<script>
+  var editor = new MediumEditor('.editable');
+</script>
+
+{% endblock %}

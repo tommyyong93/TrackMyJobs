@@ -1,0 +1,372 @@
+{% extends "jobs/job_base.html" %}
+{% load bootstrap4 %}
+{% load static %}
+{% block jobcontent %}
+{{ applied_jobs_dict|json_script:"applied-data" }}
+{{ online_jobs_dict|json_script:"online-data" }}
+{{ phone_jobs_dict|json_script:"phone-data" }}
+{{ video_jobs_dict|json_script:"video-data" }}
+{{ onsite_jobs_dict|json_script:"onsite-data" }}
+{{ final_jobs_dict|json_script:"final-data" }}
+{{ rejection_jobs_dict|json_script:"rejection-data" }}
+{{ no_response_dict|json_script:"no-response-data" }}
+<script type="text/javascript" src="{% static 'jobtracker/js/plots.js' %}"></script>
+<script type="text/javascript">
+  // Load the Visualization API and the corechart package.
+  google.charts.load('current', {
+    'packages': ['sankey']
+  });
+
+  // Set a callback to run when the Google Visualization API is loaded.
+  google.charts.setOnLoadCallback(drawChart);
+
+  // set up mapping for sankey diagram
+  class jobmapping {
+    constructor(from, to, count) {
+      this.from = from;
+      this.to = to;
+      this.count = count;
+    }
+    getFrom() {
+      return this.from;
+    }
+    getTo() {
+      return this.to;
+    }
+    incrementCount() {
+      this.count++;
+    }
+    getCount() {
+      return this.count
+    }
+  }
+
+  // Parse data
+  var applied_data = JSON.parse(JSON.parse(document.getElementById('applied-data').textContent));
+  var online_data = JSON.parse(JSON.parse(document.getElementById('online-data').textContent));
+  var phone_data = JSON.parse(JSON.parse(document.getElementById('phone-data').textContent));
+  var video_data = JSON.parse(JSON.parse(document.getElementById('video-data').textContent));
+  var onsite_data = JSON.parse(JSON.parse(document.getElementById('onsite-data').textContent));
+  var final_data = JSON.parse(JSON.parse(document.getElementById('final-data').textContent));
+  var rejection_data = JSON.parse(JSON.parse(document.getElementById('rejection-data').textContent));
+  var no_response_data = JSON.parse(JSON.parse(document.getElementById('no-response-data').textContent));
+
+  // Get Counts
+  var applied_count = Object.keys(applied_data).length
+  var online_count = Object.keys(online_data).length
+  var phone_count = Object.keys(phone_data).length
+  var video_count = Object.keys(video_data).length
+  var onsite_count = Object.keys(onsite_data).length
+  var final_count = Object.keys(final_data).length
+  var rejection_count = Object.keys(rejection_data).length
+  var no_response_count = Object.keys(no_response_data).length
+
+  // mappings
+  var applied_to_online = new jobmapping("Applied", "Online", 0);
+  var applied_to_phone = new jobmapping("Applied", "Phone", 0)
+  var applied_to_video = new jobmapping("Applied", "Video", 0)
+  var applied_to_onsite = new jobmapping("Applied", "Onsite", 0)
+  var applied_to_final = new jobmapping("Applied", "Final", 0)
+  var applied_to_rejection = new jobmapping("Applied", "Rejection", 0)
+  var applied_to_no = new jobmapping("Applied", "No response", 0)
+
+  var online_to_phone = new jobmapping("Online", "Phone", 0)
+  var online_to_video = new jobmapping("Online", "Video", 0)
+  var online_to_onsite = new jobmapping("Online", "Onsite", 0)
+  var online_to_final = new jobmapping("Online", "Final", 0)
+  var online_to_rejection = new jobmapping("Online", "Rejection", 0)
+  var online_to_no = new jobmapping("Online", "No Response", 0)
+
+  var phone_to_video = new jobmapping("Phone", "Video", 0)
+  var phone_to_onsite = new jobmapping("Phone", "Onsite", 0)
+  var phone_to_final = new jobmapping("Phone", "Final", 0)
+  var phone_to_rejection = new jobmapping("Phone", "Rejection", 0)
+  var phone_to_no = new jobmapping("Phone", "No Response", 0)
+
+  var video_to_onsite = new jobmapping("Video", "Onsite", 0)
+  var video_to_final = new jobmapping("Video", "Final", 0)
+  var video_to_rejection = new jobmapping("Video", "Rejection", 0)
+  var video_to_no = new jobmapping("Video", "No Response", 0)
+
+  var onsite_to_final = new jobmapping("Onsite", "Final", 0)
+  var onsite_to_rejection = new jobmapping("Onsite", "Rejection", 0)
+  var onsite_to_no = new jobmapping("Onsite", "No Response", 0)
+
+  // check mappings from applied data
+  for (const key of Object.values(applied_data)) {
+    if (key.fields.date_online_assessment != null ||
+      key.fields.status == "Online Assessment 1" ||
+      key.fields.status == "Online Assessment 2" ||
+      key.fields.status == "Online Assessment 3") {
+      applied_to_online.incrementCount()
+    }
+    if (key.fields.date_phone_interview != null ||
+      key.fields.status == "Phone Interview 1" ||
+      key.fields.status == "Phone Interview 2") {
+      if (key.fields.date_online_assessment == null) {
+        applied_to_phone.incrementCount()
+      }
+    }
+    if (key.fields.date_video_interview != null ||
+      key.fields.status == "Video Interview 1" ||
+      key.fields.status == "Video Interview 2") {
+      if (key.fields.date_phone_interview == null &&
+        key.fields.date_online_assessment == null) {
+        applied_to_video.incrementCount()
+      }
+    }
+    if (key.fields.date_onsite_interview != null ||
+      key.fields.status == "Onsite Interview") {
+      if (key.fields.date_phone_interview == null &&
+        key.fields.date_online_assessment == null &&
+        key.fields.date_video_interview == null) {
+        applied_to_onsite.incrementCount()
+      }
+    }
+    if (key.fields.date_final_decision != null ||
+      key.fields.status == "Offer" ||
+      key.fields.status == "Accepted Offer" ||
+      key.fields.status == "Declined Offer") {
+      if (key.fields.date_phone_interview == null &&
+        key.fields.date_online_assessment == null &&
+        key.fields.date_video_interview == null &&
+        key.fields.date_onsite_interview == null) {
+        applied_to_final.incrementCount()
+      }
+    }
+    if (key.fields.date_rejected != null ||
+      key.fields.status == "Rejection") {
+      if (key.fields.date_phone_interview == null &&
+        key.fields.date_online_assessment == null &&
+        key.fields.date_video_interview == null &&
+        key.fields.date_onsite_interview == null &&
+        key.fields.date_final_decision == null) {
+        applied_to_rejection.incrementCount()
+      }
+    }
+    if (key.fields.status == "No Response") {
+      if (key.fields.date_phone_interview == null &&
+        key.fields.date_online_assessment == null &&
+        key.fields.date_video_interview == null &&
+        key.fields.date_onsite_interview == null &&
+        key.fields.date_final_decision == null &&
+        key.fields.data_rejected == null) {
+        applied_to_no.incrementCount()
+      }
+    }
+  }
+
+  // check mappings from online data
+  for (const key of Object.values(online_data)) {
+    if (key.fields.date_phone_interview != null ||
+      key.fields.status == "Phone Interview 1" ||
+      key.fields.status == "Phone Interview 2") {
+      online_to_phone.incrementCount()
+    }
+    if (key.fields.date_video_interview != null ||
+      key.fields.status == "Video Interview 1" ||
+      key.fields.status == "Video Interview 2") {
+      if (key.fields.date_phone_interview == null) {
+        online_to_video.incrementCount()
+      }
+    }
+    if (key.fields.date_onsite_interview != null ||
+      key.fields.status == "Onsite Interview") {
+      if (key.fields.date_phone_interview == null &&
+        key.fields.date_video_interview == null) {
+        online_to_onsite.incrementCount()
+      }
+    }
+    if (key.fields.date_final_decision != null ||
+      key.fields.status == "Offer" ||
+      key.fields.status == "Accepted Offer" ||
+      key.fields.status == "Declined Offer") {
+      if (key.fields.date_phone_interview == null &&
+        key.fields.date_video_interview == null &&
+        key.fields.date_onsite_interview == null) {
+        online_to_final.incrementCount()
+      }
+    }
+    if (key.fields.date_rejected != null ||
+      key.fields.status == "Rejection") {
+      if (key.fields.date_phone_interview == null &&
+        key.fields.date_video_interview == null &&
+        key.fields.date_onsite_interview == null &&
+        key.fields.date_final_decision == null) {
+        online_to_rejection.incrementCount()
+      }
+    }
+    if (key.fields.status == "No Response") {
+      if (key.fields.date_phone_interview == null &&
+        key.fields.date_video_interview == null &&
+        key.fields.date_onsite_interview == null &&
+        key.fields.date_final_decision == null &&
+        key.fields.date_rejected == null) {
+        online_to_no.incrementCount()
+      }
+    }
+  }
+
+  // check mappings from phone data
+  for (const key of Object.values(phone_data) ||
+      key.fields.status == "Video Interview 1" ||
+      key.fields.status == "Video Interview 2") {
+    if (key.fields.date_video_interview != null) {
+      phone_to_video.incrementCount()
+    }
+    if (key.fields.date_onsite_interview != null ||
+      key.fields.status == "Onsite Interview") {
+      if (key.fields.date_video_interview == null) {
+        phone_to_onsite.incrementCount()
+      }
+    }
+    if (key.fields.date_final_decision != null ||
+      key.fields.status == "Offer" ||
+      key.fields.status == "Accepted Offer" ||
+      key.fields.status == "Declined Offer") {
+      if (key.fields.date_video_interview == null &&
+        key.fields.date_onsite_interview == null) {
+        phone_to_final.incrementCount()
+      }
+    }
+    if (key.fields.date_rejected != null ||
+      key.fields.status == "Rejection") {
+      if (key.fields.date_video_interview == null &&
+        key.fields.date_onsite_interview == null &&
+        key.fields.date_final_decision == null) {
+        phone_to_rejection.incrementCount()
+      }
+    }
+    if (key.fields.status == "No Response") {
+      if (key.fields.date_rejected == null &&
+        key.fields.date_video_interview == null &&
+        key.fields.date_onsite_interview == null &&
+        key.fields.date_final_decision == null) {
+        phone_to_no.incrementCount()
+      }
+    }
+  }
+
+  // check mappings from video data
+  for (const key of Object.values(video_data)) {
+    if (key.fields.date_onsite_interview != null ||
+      key.fields.status == "Onsite Interview") {
+      video_to_onsite.incrementCount()
+    }
+    if (key.fields.date_final_decision != null ||
+      key.fields.status == "Offer" ||
+      key.fields.status == "Accepted Offer" ||
+      key.fields.status == "Declined Offer") {
+      if (key.fields.date_onsite_interview == null) {
+        video_to_final.incrementCount()
+      }
+    }
+    if (key.fields.date_rejected != null ||
+      key.fields.status == "Rejection") {
+      if (key.fields.date_final_decision == null &&
+        key.fields.date_onsite_interview == null) {
+        video_to_rejection.incrementCount()
+      }
+    }
+    if (key.fields.status == "No Response") {
+      if (key.fields.date_rejected == null &&
+        key.fields.date_onsite_interview == null &&
+        key.fields.date_final_decision == null) {
+        video_to_no.incrementCount()
+      }
+    }
+  }
+
+  // check mappings from onsite data
+  for (const key of Object.values(onsite_data)) {
+    if (key.fields.date_final_decision != null ||
+      key.fields.status == "Offer" ||
+      key.fields.status == "Accepted Offer" ||
+      key.fields.status == "Declined Offer") {
+      onsite_to_final.incrementCount()
+    }
+    if (key.fields.date_rejected != null ||
+      key.fields.status == "Rejection") {
+      if (key.fields.date_final_decision == null) {
+        onsite_to_rejection.incrementCount()
+      }
+    }
+    if (key.fields.status == "No Response") {
+      if (key.fields.date_final_decision == null &&
+        key.fields.date_rejected == null) {
+        onsite_to_no.incrementCount()
+      }
+    }
+  }
+
+  var sankeyRows = [
+    [applied_to_online.getFrom(), applied_to_online.getTo(), applied_to_online.getCount()],
+    [applied_to_phone.getFrom(), applied_to_phone.getTo(), applied_to_phone.getCount()],
+    [applied_to_video.getFrom(), applied_to_video.getTo(), applied_to_video.getCount()],
+    [applied_to_onsite.getFrom(), applied_to_onsite.getTo(), applied_to_onsite.getCount()],
+    [applied_to_final.getFrom(), applied_to_final.getTo(), applied_to_final.getCount()],
+    [applied_to_rejection.getFrom(), applied_to_rejection.getTo(), applied_to_rejection.getCount()],
+    [applied_to_no.getFrom(), applied_to_no.getTo(), applied_to_no.getCount()],
+    [online_to_phone.getFrom(), online_to_phone.getTo(), online_to_phone.getCount()],
+    [online_to_video.getFrom(), online_to_video.getTo(), online_to_video.getCount()],
+    [online_to_onsite.getFrom(), online_to_onsite.getTo(), online_to_onsite.getCount()],
+    [online_to_final.getFrom(), online_to_final.getTo(), online_to_final.getCount()],
+    [online_to_rejection.getFrom(), online_to_rejection.getTo(), online_to_rejection.getCount()],
+    [online_to_no.getFrom(), online_to_no.getTo(), online_to_no.getCount()],
+    [phone_to_video.getFrom(), phone_to_video.getTo(), phone_to_video.getCount()],
+    [phone_to_onsite.getFrom(), phone_to_onsite.getTo(), phone_to_onsite.getCount()],
+    [phone_to_final.getFrom(), phone_to_final.getTo(), phone_to_final.getCount()],
+    [phone_to_rejection.getFrom(), phone_to_rejection.getTo(), phone_to_rejection.getCount()],
+    [phone_to_no.getFrom(), phone_to_no.getTo(), phone_to_no.getCount()],
+    [video_to_onsite.getFrom(), video_to_onsite.getTo(), video_to_onsite.getCount()],
+    [video_to_final.getFrom(), video_to_final.getTo(), video_to_final.getCount()],
+    [video_to_rejection.getFrom(), video_to_rejection.getTo(), video_to_rejection.getCount()],
+    [video_to_no.getFrom(), video_to_no.getTo(), video_to_no.getCount()],
+    [onsite_to_final.getFrom(), onsite_to_final.getTo(), onsite_to_final.getCount()],
+    [onsite_to_rejection.getFrom(), onsite_to_rejection.getTo(), onsite_to_rejection.getCount()],
+    [onsite_to_no.getFrom(), onsite_to_no.getTo(), onsite_to_no.getCount()]
+  ]
+
+  var result = sankeyRows.filter(row => row[2] > 0);
+
+  function drawChart() {
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'From');
+    data.addColumn('string', 'To');
+    data.addColumn('number', 'Weight');
+    data.addRows(result);
+
+    // Sets chart options.
+    var options = {
+      height: $(window).height() * 0.5,
+      sankey: {
+        node: {
+          interactivity: true, // Allows you to select nodes.
+          labelPadding: 6, // Horizontal distance between the label and the node.
+          nodePadding: 10, // Vertical distance between nodes.
+          width: 10, // Thickness of the node.
+        },
+      },
+    };
+
+    // Instantiates and draws our chart, passing in some options.
+    var chart = new google.visualization.Sankey(document.getElementById('sankey_basic'));
+    chart.draw(data, options);
+  }
+</script>
+{% if user.jobs.count == 0 %}
+<div class="container">
+  <h1 class='subpage-title'>You have no job applications yet!</h1>
+  <h2 class='subpage-title'>Click <a href="{% url 'jobs:create' %}">here</a> to create a new application!</h2>
+</div>
+{% else %}
+<div class="container">
+  <h1 class='subpage-title'>Sankey diagram of your progress</h1>
+</div>
+<div class="container">
+  <div class="col-12 detail-card">
+    <div id="sankey_basic"></div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

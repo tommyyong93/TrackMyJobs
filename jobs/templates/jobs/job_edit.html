@@ -1,0 +1,18 @@
+{% extends "jobs/job_base.html" %}
+{% load bootstrap4 %}
+{% block jobcontent %}
+<div class="container">
+  <h1 class='subpage-title'>Update your job application at {{ job.name }}</h1>
+  <div class="container">
+    <form action="{% url 'jobs:job_edit' job.pk %}" method="POST" id='jobForm'>
+      {% csrf_token %}
+      {% bootstrap_form form %}
+      <input type="submit" class="btn btn-primary btn-large" value="Submit">
+    </form>
+  </div>
+</div>
+<script>
+  var editor = new MediumEditor('.editable');
+</script>
+
+{% endblock %}

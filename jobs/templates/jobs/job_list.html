@@ -1,0 +1,25 @@
+{% extends "jobs/job_base.html" %}
+{% block jobcontent %}
+<div class="container">
+  {% if user.jobs.count == 0 %}
+  <h1 class='subpage-title'>You have no job applications yet!</h1>
+  <h2 class='subpage-title'>Click <a href="{% url 'jobs:create' %}">here</a> to create a new application!</h2>
+  {% else %}
+  <h1 class='subpage-title'>Your Job List</h1>
+  {% endif %}
+</div>
+{% if user.jobs.count != 0 %}
+<div class="container">
+  <div class="row sort">
+    <a href="{% url 'jobs:list' %}">Sort by Date Applied</a>
+    <a href="{% url 'jobs:name' %}">Sort by Name</a>
+    <a href="{% url 'jobs:status' %}">Sort by Status</a>
+  </div>
+</div>
+{% endif %}
+<div class="col-12">
+  {% for job in job_list  %}
+  {% include "jobs/_job.html" %}
+  {% endfor %}
+</div>
+{% endblock %}

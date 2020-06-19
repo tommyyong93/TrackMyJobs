@@ -1,0 +1,94 @@
+body{
+  font-family: 'Anonymous Pro', monospace;
+  background-color: #DCC7AA
+}
+
+a{
+  color: black;
+}
+
+.welcome_title{
+  font-size: 5em;
+  font-weight: bold;
+  text-align: center;
+  margin: 0.2em;
+}
+
+.welcome_subtitle{
+  font-size: 1.5em;
+  text-align: center;
+}
+
+.subtitle{
+  font-size: 2.5em;
+  font-weight: bold;
+}
+
+.subpage-title{
+  text-align: center;
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+}
+
+.description{
+  font-size: 1.5em;
+}
+
+.frontpage-row{
+  text-align: justify;
+  margin: 3em;
+}
+
+.job_description{
+  height : 150px;
+  overflow-y: scroll;
+}
+
+.footer{
+  display: flex;
+  justify-content: space-around;
+}
+
+.job-card{
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+}
+
+.dash-card{
+  margin:0.5em;
+}
+
+.detail-card{
+  display: wrap;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  margin:1em;
+  height: 100%;
+}
+
+.sort{
+  display: flex;
+  justify-content: space-around;
+}
+
+.form-group-manual{
+  display:flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: column;
+}
+
+.filter-container{
+  display:flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+#id_date_applied_0{
+  margin-bottom: 2px;
+}
+
+#id_date_applied_1{
+  margin-top: 6px;
+}

@@ -1,0 +1,71 @@
+<div class="col-12 col">
+  <div class="card job-card">
+    <div class="header">
+      <h5 class='card-header'>
+        <a href="{% url 'jobs:detail' job.pk %}">{{ job.name }}</a>
+        <a data-toggle="collapse" href={{"#"|add:job.name}} role="button" aria-expanded="false" aria-controls={{job.name}}><svg class="bi bi-chevron-expand" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd"
+              d="M3.646 9.146a.5.5 0 0 1 .708 0L8 12.793l3.646-3.647a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 0-.708zm0-2.292a.5.5 0 0 0 .708 0L8 3.207l3.646 3.647a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 0 0 0 .708z" />
+          </svg>
+        </a>
+      </h5>
+    </div>
+    <div class="card-body collapse job-collapse" id={{job.name}}>
+      {% if job.status == 'Applied' %}
+      <h6 class="card-subtitle mb-2">Status: <span class='text-warning'>{{ job.status }}</span>
+      </h6>
+      {% elif job.status == 'Online Assessment 1' or job.status == 'Online Assessment 2' or job.status == 'Online Assessment 3' %}
+      <h6 class="card-subtitle mb-2">Status: <span class='text-info'>{{ job.status }}</span>
+      </h6>
+      {% elif job.status == 'Phone Interview 1' or job.status == 'Phone Interview 2' %}
+      <h6 class="card-subtitle mb-2">Status: <span class='text-info'>{{ job.status }}</span>
+      </h6>
+      {% elif job.status == 'Video Interview 1' or job.status == 'Video Interview 2' %}
+      <h6 class="card-subtitle mb-2">Status: <span class='text-info'>{{ job.status }}</span>
+      </h6>
+      {% elif job.status == 'Onsite Interview' %}
+      <h6 class="card-subtitle mb-2">Status: <span class='text-info'>{{ job.status }}</span>
+      </h6>
+      {% elif job.status == 'Offer' %}
+      <h6 class="card-subtitle mb-2">Status: <span class='text-success'>{{ job.status }}</span>
+      </h6>
+      {% elif job.status == 'Rejection' %}
+      <h6 class="card-subtitle mb-2">Status: <span class='text-danger'>{{ job.status }}</span>
+      </h6>
+      {% elif job.status == 'Accepted Offer' %}
+      <h6 class="card-subtitle mb-2">Status: <span class='text-success'>{{ job.status }}</span>
+      </h6>
+      {% elif job.status == 'Decline Offer' %}
+      <h6 class="card-subtitle mb-2">Status: <span class='text-secondary'>{{ job.status }}</span>
+      </h6>
+      {% elif job.status == 'No Response' %}
+      <h6 class="card-subtitle mb-2">Status: <span class='text-muted'>{{ job.status }}</span>
+      </h6>
+      {% endif %}
+      {% if job.location != "" and job.location != "<p><br></p>" %}
+      <h6 class="card-subtitle mb-2">Location: <span class='text-muted'>{{ job.location }}</span>
+      </h6>
+      {% endif %}
+      <h6 class="card-subtitle mb-2 text-muted">Date Applied: {{ job.date_applied }}</h6>
+      {% if job.date_online_assessment != null %}
+      <h6 class="card-subtitle mb-2 text-muted">Date Online Assessment: {{ job.date_online_assessment }}</h6>
+      {% endif %}
+      {% if job.date_phone_interview != null %}
+      <h6 class="card-subtitle mb-2 text-muted">Date Phone Interview: {{ job.date_phone_interview }}</h6>
+      {% endif %}
+      {% if job.date_video_interview != null %}
+      <h6 class="card-subtitle mb-2 text-muted">Date Video Interview: {{ job.date_video_interview }}</h6>
+      {% endif %}
+      {% if job.date_onsite_interview != null %}
+      <h6 class="card-subtitle mb-2 text-muted">Date Onsite Interview: {{ job.date_onsite_interview }}</h6>
+      {% endif %}
+      {% if job.date_final_decision != null %}
+      <h6 class="card-subtitle mb-2 text-muted">Date Final Decision: {{ job.date_final_decision }}</h6>
+      {% endif %}
+      {% if job.notes != null and job.notes != "<p><br></p>" %}
+      <p>{{job.notes_html|safe}}</p>
+      {% endif %}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+<div class="header container">
+  <h1 class='welcome_title'>Welcome to Job Tracker!</h1>
+  <h2 class='welcome_subtitle'>Organize your job and internship applications all in one place!</h2>
+</div>
+<hr class='bg-light'>
+<div class="row frontpage-row">
+  <h3 class='frontpage subtitle'>No more sifting through your inbox!</h3>
+  <div class="row">
+    <img class='col-3' src="{% static "images/envelope.svg" %}" alt="">
+    <p class='col-9 description'>Tired of searching through your inbox to find if you applied for a particular position? Keep all your job and internship applications all in one place.
+      The Job Tracker platform allows you to seemlessly add new job applications and keep them all in one place.</p>
+  </div>
+</div>
+<hr class='bg-light'>
+<div class="row frontpage-row">
+  <h3 class='frontpage subtitle'>Keep track of when you applied!</h3>
+  <div class="row">
+    <p class='col-9 description'>Forgetting when you applied to a particular position? Want to know how long it's been since you've been contacted by a recruiter?
+      Has it been long enough to warrant a follow-up email? Keep all the dates of your applications in one place. </p>
+    <img class='col-3' src="{% static "images/month.svg" %}" alt="">
+  </div>
+</div>
+<hr class='bg-light'>
+<div class="row frontpage-row">
+  <h3 class='frontpage subtitle'>Add detailed notes as you progress!</h3>
+  <div class="row">
+    <img class='col-3' src="{% static "images/seo-and-web.svg" %}" alt="">
+    <p class='col-9 description'>Add notes to each job application! Use these notes to prepare for online assessments, to add details during your interview or to
+      add anything else that you need to remember!</p>
+  </div>
+</div>
+<p style="font-size:0.5em">"Icons made by Freepik from www.flaticon.com"</p>
+<hr class='bg-light'>
+<div class="footer">
+  <a href="https://www.tommyyong.com" class='col-lg-8 col-md-8 col-sm-4'>Tommy Yong</a>
+  <a href="https://www.linkedin.com/in/tommy-yong-107b15101/" class='col-lg-2 col-md-2 col-sm-4'>LinkedIn</a>
+  <a href="https://github.com/tommyyong93" class='col-lg-2 col-md-2 col-sm-4'>GitHub</a>
+</div>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+<div class="row frontpage-row">
+  <h3 class='frontpage subtitle'>Add a job or internship application</h3>
+  <div class="row frontpage-row">
+    <p class=' description'>Easily add new job applications.</p>
+    <div class="row">
+      <a href="{% static "images/newapp.png" %}" target="_blank"><img style="width:50%;border:1px solid black" src="{% static "images/newapp.png" %}" alt=""></a>
+    </div>
+  </div>
+</div>
+<hr>
+<div class="row frontpage-row">
+  <h3 class='frontpage subtitle'>Keep track of all your applications</h3>
+  <div class="row frontpage-row">
+    <p class='description'>Keep all your applications in one place. Sort by when you applied or by application status.</p>
+    <a href="{% static "images/joblist.png" %}" target="_blank"><img style="width:50%;border:1px solid black" src="{% static "images/joblist.png" %}" alt=""></a>
+  </div>
+</div>
+<hr>
+<div class="row frontpage-row">
+  <h3 class='frontpage subtitle'>Add detailed notes as you progress</h3>
+  <div class="row frontpage-row">
+    <p class=' description'>Update your applications throughout the recruitment process. Update each job as necessary and add detailed notes for future reference.</p>
+    <a href="{% static "images/update.png" %}" target="_blank"><img style="width:50%;border:1px solid black" src="{% static "images/update.png" %}" alt=""></a>
+  </div>
+</div>
+<hr>
+<div class="footer">
+  <a href="https://sites.google.com/view/tommyyong" class='col-lg-8 col-md-8 col-sm-4'>Tommy Yong</a>
+  <a href="https://www.linkedin.com/in/tommy-yong-107b15101/" class='col-lg-2 col-md-2 col-sm-4'>LinkedIn</a>
+  <a href="https://github.com/tommyyong93" class='col-lg-2 col-md-2 col-sm-4'>GitHub</a>
+</div>
+{% endblock %}
+<script src="https://www.gstatic.com/charts/loader.js"></script>
