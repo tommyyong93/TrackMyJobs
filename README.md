@@ -1,4 +1,4 @@
-# Jobtracker
+# TrackMyJobs
 
 A simple web application that helps you keep track of job applications.
 
